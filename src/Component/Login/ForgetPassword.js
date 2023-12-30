@@ -113,8 +113,7 @@ function ForgetPassword() {
      </Link>
     </Typography>
   
-    
-    <Typography sx={{...PrivacyWhiteText,paddingTop:"0px"}} paddingTop={0}>Email Is Sent </Typography>
+    <Typography sx={{...signupWithText,marginBottom:5}}>Email Is Sent</Typography>
   </Box>
 </Box>
   </>

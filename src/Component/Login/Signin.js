@@ -1,5 +1,5 @@
 import { Box, Typography, TextField, Button } from "@mui/material";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { color, styled } from "@mui/system";
 import { Link } from "react-router-dom";
 import {
@@ -12,6 +12,8 @@ import {
   ButtonCss,
   signupWithText,
 } from "../../Style/LogIn/LoginStyle";
+import Cookies from 'js-cookie';
+import { AppContext, useProfileGlobal } from "../../ContextApi/Context";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -40,6 +42,44 @@ const CustomTextField = styled(TextField)(({ error }) => ({
 }));
 
 function Signin() {
+    const {loginAccount,sendConfirmationEmail, currentUser } = useProfileGlobal();
+  
+    let Data = useContext(AppContext);
+    
+
+    useEffect(() => {
+        if (Data.loginStatus ) {
+            const token =Data.loginStatus.access;
+            Cookies.set('authToken', token);
+            const Maill = {
+                token:token,
+                email:userData.email
+
+            }
+
+            currentUser(Maill)
+            sendConfirmationEmail(Maill)
+        }
+      }, [Data.loginStatus]);
+    const [userData, setUserData] = useState({
+    
+        email: "",
+      
+        password: "",
+      
+      });
+    const handleInputChange = (field) => (event) => {
+        setUserData({
+          ...userData,
+          [field]: event.target.value,
+        });
+      };
+      const handleCreateAccount = () => {
+        // Check if all fields are filled
+   loginAccount(userData)
+     
+      };
+      console.log(userData)
   return (
     <>
       <Box sx={loginContainer}>
@@ -70,6 +110,8 @@ function Signin() {
               <CustomTextField
                 id="title"
                 fullWidth
+                value={userData.email}
+                onChange={handleInputChange("email")}
                 InputLabelProps={{
                   sx: {
                     fontWeight: 100,
@@ -109,6 +151,8 @@ function Signin() {
               <CustomTextField
                 id="title"
                 fullWidth
+                value={userData.password}
+                onChange={handleInputChange("password")}
                 InputLabelProps={{
                   sx: {
                     fontWeight: 100,
@@ -141,6 +185,7 @@ function Signin() {
               sx={{
                 ...ButtonCss,
               }}
+              onClick={handleCreateAccount}
             >
               LOGIN
             </Button>

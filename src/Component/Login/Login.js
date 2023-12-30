@@ -1,7 +1,7 @@
 import { Box, Typography, TextField, Button } from "@mui/material";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { color, styled } from "@mui/system";
-
+import { AppContext, useProfileGlobal } from "../../ContextApi/Context";
 import {
   loginContainer,
   loginBox,
@@ -19,7 +19,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import HttpsIcon from "@mui/icons-material/Https";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CustomTextField = styled(TextField)(({ error }) => ({
   "& .MuiOutlinedInput-root": {
@@ -39,12 +39,71 @@ const CustomTextField = styled(TextField)(({ error }) => ({
     },
   },
 }));
+
 function Login() {
+    const { createAccount,statusupdate } = useProfileGlobal();
+  const navigate = useNavigate();
+  let Data = useContext(AppContext);
+
+  useEffect(() => {
+    if (Data.craeteAccountStatus  === 200) {
+      
+        statusupdate()
+        
+      navigate('/');
+    }
+  }, [Data.craeteAccountStatus]);
+
+
+  const [userData, setUserData] = useState({
+    first_name: "",
+    last_name: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleInputChange = (field) => (event) => {
+    setUserData({
+      ...userData,
+      [field]: event.target.value,
+    });
+  };
+
+  const handleCreateAccount = () => {
+    // Check if all fields are filled
+    if (
+      userData.firstName &&
+      userData.lastName &&
+      userData.email &&
+      userData.username &&
+      userData.password &&
+      userData.confirmPassword
+    ) {
+      // Check if passwords match
+      if (userData.password === userData.confirmPassword) {
+        // Call createAccount function
+        createAccount(userData);
+      } else {
+        alert(
+          "Passwords do not match. Please enter the same password in both fields."
+        );
+      }
+    } else {
+      // Display an alert if any field is incomplete
+      alert("All fields are required. Please fill in all the fields.");
+    }
+  };
+
+  console.log(Data);    
+   
   return (
     <>
       <Box sx={loginContainer}>
         <Box sx={loginBox}>
           <Typography sx={createText}>SIGNUP / CREATE ACCOUNT</Typography>
+        
           <Typography
             sx={{
               display: "flex",
@@ -55,9 +114,7 @@ function Login() {
               marginTop: 2,
             }}
           >
-            <Box
-              style={{ display: "flex", alignItems: "center", width: "40%" }}
-            >
+            <Box style={{ display: "flex", alignItems: "center", width: "40%" }}>
               <Typography component="span" color="#FEA01A">
                 <PersonIcon />
               </Typography>
@@ -67,8 +124,10 @@ function Login() {
             </Box>
             <Box style={{ display: "flex", alignItems: "center" }}>
               <CustomTextField
-                id="title"
+                id="firstName"
                 fullWidth
+                value={userData.firstName}
+                onChange={handleInputChange("firstName")}
                 InputLabelProps={{
                   sx: {
                     fontWeight: 100,
@@ -83,6 +142,8 @@ function Login() {
               />
             </Box>
           </Typography>
+
+          {/* Last Name */}
           <Typography
             sx={{
               display: "flex",
@@ -93,9 +154,7 @@ function Login() {
               marginTop: 2,
             }}
           >
-            <Box
-              style={{ display: "flex", alignItems: "center", width: "40%" }}
-            >
+            <Box style={{ display: "flex", alignItems: "center", width: "40%" }}>
               <Typography component="span" color="#FEA01A">
                 <PersonIcon />
               </Typography>
@@ -105,8 +164,10 @@ function Login() {
             </Box>
             <Box style={{ display: "flex", alignItems: "center" }}>
               <CustomTextField
-                id="title"
+                id="lastName"
                 fullWidth
+                value={userData.lastName}
+                onChange={handleInputChange("lastName")}
                 InputLabelProps={{
                   sx: {
                     fontWeight: 100,
@@ -121,6 +182,8 @@ function Login() {
               />
             </Box>
           </Typography>
+
+          {/* Email */}
           <Typography
             sx={{
               display: "flex",
@@ -131,9 +194,7 @@ function Login() {
               marginTop: 2,
             }}
           >
-            <Box
-              style={{ display: "flex", alignItems: "center", width: "40%" }}
-            >
+            <Box style={{ display: "flex", alignItems: "center", width: "40%" }}>
               <Typography component="span" color="#FEA01A">
                 <EmailIcon />
               </Typography>
@@ -143,8 +204,10 @@ function Login() {
             </Box>
             <Box style={{ display: "flex", alignItems: "center" }}>
               <CustomTextField
-                id="title"
+                id="email"
                 fullWidth
+                value={userData.email}
+                onChange={handleInputChange("email")}
                 InputLabelProps={{
                   sx: {
                     fontWeight: 100,
@@ -159,6 +222,8 @@ function Login() {
               />
             </Box>
           </Typography>
+
+          {/* Username */}
           <Typography
             sx={{
               display: "flex",
@@ -169,9 +234,7 @@ function Login() {
               marginTop: 2,
             }}
           >
-            <Box
-              style={{ display: "flex", alignItems: "center", width: "40%" }}
-            >
+            <Box style={{ display: "flex", alignItems: "center", width: "40%" }}>
               <Typography component="span" color="#FEA01A">
                 <PersonIcon />
               </Typography>
@@ -181,8 +244,10 @@ function Login() {
             </Box>
             <Box style={{ display: "flex", alignItems: "center" }}>
               <CustomTextField
-                id="title"
+                id="username"
                 fullWidth
+                value={userData.username}
+                onChange={handleInputChange("username")}
                 InputLabelProps={{
                   sx: {
                     fontWeight: 100,
@@ -197,6 +262,8 @@ function Login() {
               />
             </Box>
           </Typography>
+
+          {/* Password */}
           <Typography
             sx={{
               display: "flex",
@@ -207,9 +274,7 @@ function Login() {
               marginTop: 2,
             }}
           >
-            <Box
-              style={{ display: "flex", alignItems: "center", width: "40%" }}
-            >
+            <Box style={{ display: "flex", alignItems: "center", width: "40%" }}>
               <Typography component="span" color="#FEA01A">
                 <HttpsIcon />
               </Typography>
@@ -219,8 +284,10 @@ function Login() {
             </Box>
             <Box style={{ display: "flex", alignItems: "center" }}>
               <CustomTextField
-                id="title"
+                id="password"
                 fullWidth
+                value={userData.password}
+                onChange={handleInputChange("password")}
                 InputLabelProps={{
                   sx: {
                     fontWeight: 100,
@@ -235,6 +302,8 @@ function Login() {
               />
             </Box>
           </Typography>
+
+          {/* Confirm Password */}
           <Typography
             sx={{
               display: "flex",
@@ -245,9 +314,7 @@ function Login() {
               marginTop: 2,
             }}
           >
-            <Box
-              style={{ display: "flex", alignItems: "center", width: "40%" }}
-            >
+            <Box style={{ display: "flex", alignItems: "center", width: "40%" }}>
               <Typography component="span" color="#FEA01A">
                 <HttpsIcon />
               </Typography>
@@ -257,8 +324,10 @@ function Login() {
             </Box>
             <Box style={{ display: "flex", alignItems: "center" }}>
               <CustomTextField
-                id="title"
+                id="confirmPassword"
                 fullWidth
+                value={userData.confirmPassword}
+                onChange={handleInputChange("confirmPassword")}
                 InputLabelProps={{
                   sx: {
                     fontWeight: 100,
@@ -298,6 +367,7 @@ function Login() {
               sx={{
                 ...ButtonCss,
               }}
+              onClick={handleCreateAccount}
             >
               CREATE ACCOUNT
             </Button>
