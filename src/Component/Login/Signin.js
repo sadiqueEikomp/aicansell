@@ -21,7 +21,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import HttpsIcon from "@mui/icons-material/Https";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
-
+import { useNavigate } from "react-router-dom";
 const CustomTextField = styled(TextField)(({ error }) => ({
   "& .MuiOutlinedInput-root": {
     borderColor: error ? "red" : "green",
@@ -44,7 +44,7 @@ const CustomTextField = styled(TextField)(({ error }) => ({
 function Signin() {
   const { loginAccount, sendConfirmationEmail, currentUser } =
     useProfileGlobal();
-
+    const navigate = useNavigate();
   let Data = useContext(AppContext);
 
   console.log(Data);
@@ -78,6 +78,8 @@ function Signin() {
       console.log("hellofalse");
       alert("please login from mail");
       sendConfirmationEmail(Maill);
+    } else if (Data.userData.is_email_confirmed == true){
+      navigate('/LandingPage');
     }
   };
   const [userData, setUserData] = useState({
