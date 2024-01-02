@@ -42,7 +42,17 @@ const ProfileReducer = (state, action) => {
                     
                     
                 };   
-              
+                case "SET_USER_DATA":
+                    const user=action.payload
+                    console.log(user,"userrrrr")
+                    return {
+                        ...state,
+                        is_loading: false,
+                        is_error: false,
+                        userData:action.payload,
+                        
+                        
+                    };  
 
         default:
             return state;

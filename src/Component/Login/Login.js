@@ -47,7 +47,6 @@ function Login() {
 
   useEffect(() => {
     if (Data.craeteAccountStatus  === 200) {
-      
         statusupdate()
         
       navigate('/');
@@ -58,8 +57,8 @@ function Login() {
   const [userData, setUserData] = useState({
     first_name: "",
     last_name: "",
-    username: "",
     email: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
@@ -72,10 +71,10 @@ function Login() {
   };
 
   const handleCreateAccount = () => {
-    // Check if all fields are filled
+    
     if (
-      userData.firstName &&
-      userData.lastName &&
+      userData.first_name &&
+      userData.last_name &&
       userData.email &&
       userData.username &&
       userData.password &&
@@ -83,6 +82,9 @@ function Login() {
     ) {
       // Check if passwords match
       if (userData.password === userData.confirmPassword) {
+        // Delete confirm_password property if it exists
+        delete userData.confirmPassword;
+  
         // Call createAccount function
         createAccount(userData);
       } else {
@@ -95,6 +97,7 @@ function Login() {
       alert("All fields are required. Please fill in all the fields.");
     }
   };
+  
 
   console.log(Data);    
    
@@ -124,10 +127,10 @@ function Login() {
             </Box>
             <Box style={{ display: "flex", alignItems: "center" }}>
               <CustomTextField
-                id="firstName"
+                id="first_name"
                 fullWidth
-                value={userData.firstName}
-                onChange={handleInputChange("firstName")}
+                value={userData.first_name}
+                onChange={handleInputChange("first_name")}
                 InputLabelProps={{
                   sx: {
                     fontWeight: 100,
@@ -164,10 +167,10 @@ function Login() {
             </Box>
             <Box style={{ display: "flex", alignItems: "center" }}>
               <CustomTextField
-                id="lastName"
+                id="last_name"
                 fullWidth
-                value={userData.lastName}
-                onChange={handleInputChange("lastName")}
+                value={userData.last_name}
+                onChange={handleInputChange("last_name")}
                 InputLabelProps={{
                   sx: {
                     fontWeight: 100,

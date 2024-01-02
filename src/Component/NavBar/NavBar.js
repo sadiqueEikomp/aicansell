@@ -54,7 +54,7 @@ const Navbar = () => {
     <Box sx={{ flexGrow: 1 }}>
       <BlackBackgroundAppBar position="static">
         <Toolbar>
-          <LogoImage src={Logo} alt="EIKOMP Logo" />
+          <LogoImage src={Logo} alt="AicanSell Logo" />
           <LogoutBox>
             {/* LogOut Button */}
             <LogoutText sx={{ marginRight: '38px' }}>Scenario</LogoutText>

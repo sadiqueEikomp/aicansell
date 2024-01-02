@@ -12,7 +12,7 @@ import {
   ButtonCss,
   signupWithText,
 } from "../../Style/LogIn/LoginStyle";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import { AppContext, useProfileGlobal } from "../../ContextApi/Context";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -42,44 +42,60 @@ const CustomTextField = styled(TextField)(({ error }) => ({
 }));
 
 function Signin() {
-    const {loginAccount,sendConfirmationEmail, currentUser } = useProfileGlobal();
-  
-    let Data = useContext(AppContext);
-    
+  const { loginAccount, sendConfirmationEmail, currentUser } =
+    useProfileGlobal();
 
-    useEffect(() => {
-        if (Data.loginStatus ) {
-            const token =Data.loginStatus.access;
-            Cookies.set('authToken', token);
-            const Maill = {
-                token:token,
-                email:userData.email
+  let Data = useContext(AppContext);
 
-            }
+  console.log(Data);
+  useEffect(() => {
+    loginStatus();
+    sendMail();
+  }, [Data.loginStatus, Data.userData.is_email_confirmed]);
 
-            currentUser(Maill)
-            sendConfirmationEmail(Maill)
-        }
-      }, [Data.loginStatus]);
-    const [userData, setUserData] = useState({
-    
-        email: "",
-      
-        password: "",
-      
-      });
-    const handleInputChange = (field) => (event) => {
-        setUserData({
-          ...userData,
-          [field]: event.target.value,
-        });
-      };
-      const handleCreateAccount = () => {
-        // Check if all fields are filled
-   loginAccount(userData)
-     
-      };
-      console.log(userData)
+  const loginStatus = () => {
+    const token = Data.loginStatus.access;
+
+    const Maill = {
+      token: token,
+      email: userData.email,
+      refresh: Data.loginStatus.access,
+    };
+    if (Data.loginStatus) {
+      currentUser(Maill);
+    }
+  };
+  const sendMail = () => {
+    console.log("hello");
+    const token = Data.loginStatus.access;
+
+    const Maill = {
+      token: token,
+      email: userData.email,
+      refresh: Data.loginStatus.access,
+    };
+    if (Data.userData.is_email_confirmed == false) {
+      console.log("hellofalse");
+      alert("please login from mail");
+      sendConfirmationEmail(Maill);
+    }
+  };
+  const [userData, setUserData] = useState({
+    email: "",
+
+    password: "",
+  });
+  const handleInputChange = (field) => (event) => {
+    setUserData({
+      ...userData,
+      [field]: event.target.value,
+    });
+  };
+  const handleCreateAccount = () => {
+    // Check if all fields are filled
+    loginAccount(userData);
+  };
+  console.log(userData);
   return (
     <>
       <Box sx={loginContainer}>
@@ -92,7 +108,7 @@ function Signin() {
               flexDirection: "row",
               alignItems: "left ",
               justifyContent: "space-around",
-              width: "60%",
+              width: "40%",
               marginTop: 2,
             }}
           >
@@ -133,7 +149,7 @@ function Signin() {
               flexDirection: "row",
               alignItems: "flex-end",
               justifyContent: "space-around",
-              width: "60%",
+              width: "40%",
               marginTop: 2,
             }}
           >
@@ -171,12 +187,14 @@ function Signin() {
           <Typography sx={PrivacyWhiteText}>
             {" "}
             Forgot Password?{" "}
-            <Link to={"/ForgetPassword"} style={{ textDecoration: 'none', color: 'inherit' }}>
-          
-            <Typography component="span" sx={privacyText}>
-              Reset here
-            </Typography>{" "}
-            </ Link >
+            <Link
+              to={"/ForgetPassword"}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <Typography component="span" sx={privacyText}>
+                Reset here
+              </Typography>{" "}
+            </Link>
           </Typography>
           <Typography sx={createText}>
             <Button
@@ -193,11 +211,14 @@ function Signin() {
 
           <Typography sx={createText}>
             Don’t have an account?{" "}
-            <Link to={"/Signup"} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <Typography component="span" sx={privacyText}>
-              Please Signup here
-            </Typography>{" "}
-            </ Link>
+            <Link
+              to={"/Signup"}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <Typography component="span" sx={privacyText}>
+                Please Signup here
+              </Typography>{" "}
+            </Link>
           </Typography>
         </Box>
       </Box>

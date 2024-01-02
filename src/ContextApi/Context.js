@@ -16,6 +16,7 @@ const intialState = {
     is_error: false,
     craeteAccountStatus:"",
     loginStatus:"",
+    userData:"",
     is_single_loading: false,
     is_single_error: false,
 };
@@ -25,18 +26,17 @@ const intialState = {
 const AppProvider = ({ children }) => {
     const [state, dispatch] = useReducer(AllProfile, intialState);
     const createAccount = async (data) => {
-   console.log(data)
+ console.log(data,"signup")
         dispatch({ type: "IS_LOADING" });
         try {
-            const res = await axios.post(createAccounturl,data,{
-                
-              });
-            const status = await res.status;
-            console.log(status)
+            const res = await axios.post(createAccounturl,data);
+            const status = await res;
+      console.log(status)
           
             dispatch({ type: "SET_API_DATA", payload: status });
         } catch (error) {
             dispatch({ type: "API_ERROR" });
+            console.log(error,"signup")
         }
     }
  const statusupdate=()=>{
@@ -52,7 +52,7 @@ console.log(data,"sdugvcusfdb")
           });
         const status = await res;
         console.log(status,"login")
-      
+     
         dispatch({ type: "SET_API_LOGIN_DATA", payload: status.data });
     } catch (error) {
         dispatch({ type: "API_ERROR" });
@@ -67,10 +67,10 @@ const sendConfirmationEmail = async (data) => {
         ConfirmationEmail,
         data.email, // Assuming this is the request body
         {
-          headers: {
-            'Authorization': data.token,
-            'Content-Type': 'application/json', // Assuming JSON content type, adjust if needed
-          },
+            headers: {
+              'Authorization': `Bearer ${data.token}`,
+              'Content-Type': 'application/json', // Assuming JSON content type, adjust if needed
+            },
         }
       );
   
@@ -85,7 +85,7 @@ const sendConfirmationEmail = async (data) => {
   };
   
   const  currentUser=async(data)=>{
-    console.log(data.token,"sDFdddddddddddddddddddsdf")
+ 
     dispatch({ type: "IS_LOADING" });
   
     try {
@@ -94,7 +94,7 @@ const sendConfirmationEmail = async (data) => {
        // Assuming this is the request body
         {
           headers: {
-            'Authorization': data.token,
+            'Authorization': `Bearer ${data.token}`,
             'Content-Type': 'application/json', // Assuming JSON content type, adjust if needed
           },
         }
@@ -102,9 +102,10 @@ const sendConfirmationEmail = async (data) => {
   
       const status = await res;
       console.log(status, "current");
-  
+      dispatch({ type: "SET_USER_DATA", payload: status.data });
       // Handle the response or dispatch further actions as needed
     } catch (error) {
+        console.log(error,"error")
       dispatch({ type: "API_ERROR" });
       // Handle the error or dispatch further actions as needed
     }
